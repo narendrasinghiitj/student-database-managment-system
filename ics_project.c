@@ -17,6 +17,8 @@ typedef struct {
 Student students[MAX];
 int count = 0;
 char adminPass[20] = "admin123";
+
+void loadPassword();
 int main() {
     loadPassword();
     
@@ -38,3 +40,19 @@ int main() {
 
     return 0;
 }
+
+void loadPassword() {
+    FILE *fp = fopen("admin.txt", "r");
+
+    if (fp == NULL) {
+        // first time → default password
+        strcpy(adminPass, "admin123");
+
+        fp = fopen("admin.txt", "w");
+        fprintf(fp, "%s", adminPass);
+        fclose(fp);
+    } else {
+        fscanf(fp, "%s", adminPass);
+        fclose(fp);
+    }
+} 
