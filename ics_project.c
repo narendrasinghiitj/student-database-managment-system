@@ -20,6 +20,7 @@ char adminPass[20] = "admin123";
 
 void loadPassword();
 void changePassword();
+void addstudent();
 
 int main()
 {
@@ -97,3 +98,32 @@ void changePassword()
         printf("Wrong password!\n");
     }
 }
+
+
+void addStudent() {
+    if(count >= MAX) {
+        printf("Student limit reached!\n");
+        return;
+    }
+    Student s;
+    printf("Enter Student ID: ");
+    scanf("%d", &s.id);
+    while(getchar()!='\n');
+    printf("Enter Name: ");
+    fgets(s.name, 50, stdin);
+    s.name[strcspn(s.name, "\n")] = '\0';
+
+    s.total = 0;
+    for(int i=0; i<3; i++) {
+        printf("Enter marks for subject %d: ", i+1);
+        scanf("%d", &s.marks[i]);
+        s.total += s.marks[i];
+    }
+    s.percentage = s.total / 3.0;
+    s.grade = calculateGrade(s.percentage);
+
+    students[count++] = s;
+    printf("Student added successfully!\n");
+    saveStudentToFile(s);
+  }
+
