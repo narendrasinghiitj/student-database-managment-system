@@ -21,6 +21,7 @@ char adminPass[20] = "admin123";
 void loadPassword();
 void changePassword();
 void addstudent();
+void adminMode();
 
 int main()
 {
@@ -125,5 +126,34 @@ void addStudent() {
     students[count++] = s;
     printf("Student added successfully!\n");
     saveStudentToFile(s);
-  }
+  } void adminMode() {
+    char password[20];
+    printf("Enter admin password: ");
+    scanf("%s", password);
+    if(strcmp(password, adminPass) != 0) {
+        printf("Incorrect password! Access denied.\n");
+        return;
+    }
+
+    int choice;
+    while(1) {
+        printf("\n--- Admin Mode ---\n");
+        printf("1. Add Student\n2. Update Student Details\n3. Delete Student\n");
+        printf("4. Display All Students\n5. Dashboard\n6. Change Admin Password\n7. Logout\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();
+
+        switch(choice) {
+            case 1: addStudent(); break;
+            case 2: updateStudent(); break;
+            case 3: deleteStudent(); break;
+            case 4: loadStudents(); break;
+            case 5: showDashboard(); break;
+            case 6: changePassword(); break;
+            case 7: return;
+            default: printf("Invalid choice! Try again.\n");
+        }
+    }
+}
 
