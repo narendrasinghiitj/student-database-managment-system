@@ -20,8 +20,27 @@ char adminPass[20] = "admin123";
 
 void loadPassword();
 void changePassword();
-void addstudent();
+void addStudent();
 void adminMode();
+void studentMode();
+void saveData();
+char calculateGrade();
+void saveStudentToFile();
+void updateStudent();
+void deleteStudent();
+void loadStudents();
+void showDashboard();
+
+
+
+void saveData() { printf("saveData called\n"); }
+char calculateGrade() { return 'A'; }
+void saveStudentToFile() { printf("saveStudentToFile called\n"); }
+void updateStudent() { printf("updateStudent called\n"); }
+void deleteStudent() { printf("deleteStudent called\n"); }
+void loadStudents() { printf("loadStudents called\n"); }
+void showDashboard() { printf("showDashboard called\n"); }
+void studentMode() { printf("studentMode called\n"); }
 
 int main()
 {
