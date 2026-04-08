@@ -127,6 +127,18 @@ void changePassword()
     }
 }
 
+void displayStudent(Student s) {
+    printf("---------STUDENT-DETAILS---------");
+    printf("\nID: %s\nName: %s\nDOB: %s\n",s.id, s.name, s.dob);
+
+printf("\nSubjects | Marks | Credits:\n");
+for(int i=0; i<s.numSubjects; i++) {
+    printf("%s : %d | %d\n", (s.subjects+i),(s.marks+i),*(s.credits+i));
+}
+
+printf("\nTotal: %d\nPercentage: %.2f\nGrade: %c\nCGPA: %.2f\n",s.total, s.percentage, s.grade,s.cgpa);
+       printf("***********");
+}
 
 void addStudent() {
     if(count >= MAX) {
@@ -153,7 +165,9 @@ void addStudent() {
     students[count++] = s;
     printf("Student added successfully!\n");
     saveStudentToFile(s);
-  } void adminMode() {
+  } 
+  
+  void adminMode() {
     char password[20];
     printf("Enter admin password: ");
     scanf("%s", password);
@@ -225,4 +239,18 @@ char calculateGrade(float percentage) {
         return 'E';
     else
         return 'F';
+}
+
+void clearAllData() {
+    FILE *fp = fopen(FILE_NAME, "wb");
+
+    if(fp != NULL) {
+        int zero = 0;
+        fwrite(&zero, sizeof(int), 1, fp);
+        fclose(fp);
+    }
+
+    count = 0;
+
+    printf("All data cleared!\n");
 }
