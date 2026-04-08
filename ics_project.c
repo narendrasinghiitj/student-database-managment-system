@@ -14,6 +14,7 @@ typedef struct
     int numSubjects;
     int marks[10];
     int credits[10];
+    int marks[10];
     int total;
     float percentage;
     char grade;
@@ -40,7 +41,10 @@ void updateStudent();
 void deleteStudent();
 void loadStudents();
 void showDashboard();
+<<<<<<< HEAD
 void hashPassword(char *str);
+=======
+>>>>>>> bbdec2d4c044c1b451c0d78b83e47d228a1be7ad
 
 void saveData() { printf("saveData called\n"); }
 char calculateGrade() { return 'A'; }
@@ -79,9 +83,11 @@ int main()
             printf("Invalid choice! Try again.\n");
         }
     }
-
-    return 0;
 }
+    
+Student students[MAX];
+int count = 0;
+char adminPass[20] = "admin123";
 
 void loadPassword()
 {
@@ -134,7 +140,7 @@ void displayStudent(Student s) {
 
 printf("\nSubjects | Marks | Credits:\n");
 for(int i=0; i<s.numSubjects; i++) {
-    printf("%s : %d | %d\n", (s.subjects+i),(s.marks+i),*(s.credits+i));
+    printf("%s : %d | %d\n", *(s.subjects+i),*(s.marks+i),*(s.credits+i));
 }
 
 printf("\nTotal: %d\nPercentage: %.2f\nGrade: %c\nCGPA: %.2f\n",s.total, s.percentage, s.grade,s.cgpa);
@@ -147,22 +153,21 @@ void addStudent() {
         return;
     }
     Student s;
+    int *m = s.marks;
+    int *c = s.credits;
     printf("Enter Student ID: ");
-    scanf("%d", &s.id);
+    scanf("%s", &s.id);
     while(getchar()!='\n');
     printf("Enter Name: ");
     fgets(s.name, 50, stdin);
     s.name[strcspn(s.name, "\n")] = '\0';
 
-    s.total = 0;
-    for(int i=0; i<3; i++) {
-        printf("Enter marks for subject %d: ", i+1);
-        scanf("%d", &s.marks[i]);
-        s.total += s.marks[i];
-    }
-    s.percentage = s.total / 3.0;
-    s.grade = calculateGrade(s.percentage);
+    printf("Enter Date of Birth(dd/mm/yyyy):");
+    scanf("%s",s.dob);
+    printf("Enter number of Subjects;");
+    scanf("%d",&s.numSubjects);
 
+<<<<<<< HEAD
     students[count++] = s;
     printf("Student added successfully!\n");
     saveStudentToFile(s);
@@ -224,6 +229,31 @@ void addStudent() {
 
 
     void adminMode() {
+=======
+    s.total=0;
+    float totalGP=0;
+    int totalCredits = 0;
+    for(int i=0;i<s.numSubjects;i++){
+        printf("Enter subject %d name :",i+1);
+        scanf("%s",&s.subjects[i]);
+        printf("Enter marks for %s :",s.subjects[i]);
+        scanf("%d",(m+i));
+        s.total +=  *(m+i);
+        float gp = getGradePoint(*(m+i));
+        totalGP += gp*(*(c+i));
+        totalCredits += *(c+i);
+    }
+    s.percentage = s.total/(float)s.numSubjects;
+    s.grade = calculateGrade(s.percentage);
+    s.cgpa = totalGP/totalCredits;
+
+    students[count++]=s;
+    saveData();
+    printf("Student added succesfully !\n");
+  }  
+  
+  void adminMode() {
+>>>>>>> bbdec2d4c044c1b451c0d78b83e47d228a1be7ad
     char password[20];
     printf("Enter admin password: ");
     scanf("%s", password);
@@ -253,6 +283,49 @@ void addStudent() {
         }
     }
 }
+
+//studentmode
+
+void studentMode() {
+    char id[20], dob[15];
+    int found = 0;
+
+    printf("Enter Student ID: ");
+    scanf("%s", id);
+
+    printf("Enter DOB (dd/mm/yyyy): ");
+    scanf("%s", dob);
+
+    for(int i=0; i<count; i++) {
+        if(strcmp(students[i].id, id) == 0) {
+            if(strcmp(students[i].dob, dob) == 0) {
+                displayStudent(students[i]);
+            } else {
+                printf("Incorrect DOB!\n");
+            }
+            found = 1;
+            break;
+        }
+    }
+
+    if(!found) printf("Student not found!\n");
+}
+
+void loadData() {
+    FILE *fp = fopen(FILE_NAME, "rb");
+    if(fp == NULL){
+        count=0;
+        return;
+    }
+    fread(&count, sizeof(int), 1, fp);
+    fread(students, sizeof(Student), count, fp);
+    if(count<0||count>MAX){
+        count=0;
+    }
+
+    fclose(fp);
+}
+
 void saveData() {
     FILE *fp = fopen(FILE_NAME, "wb");
 
@@ -279,4 +352,76 @@ char calculateGrade(float percentage) {
         return 'E';
     else
         return 'F';
+}
+float getGradePoint(int p){
+    if(p >= 90) return 10;
+    else if(p >= 80) return 9;
+    else if(p >= 70) return 8;
+    else if(p >= 60) return 7;
+    else if(p >= 50) return 6;
+    else if(p >= 40) return 5;
+    else if(p >= 30) return 4;
+    else if(p >= 20) return 3;
+    else if(p >= 10) return 2;
+
+    else return 0;
+}
+void clearAllData() {
+    FILE *fp = fopen(FILE_NAME, "wb");
+
+    if(fp != NULL) {
+        int zero = 0;
+        fwrite(&zero, sizeof(int), 1, fp);
+        fclose(fp);
+    }
+
+    count = 0;
+
+    printf("All data cleared!\n");
+}
+void searchStudent() {
+    char id[20];
+    int found = 0;
+
+    printf("Enter Student ID to search: ");
+    scanf("%s", id);
+
+    for(int i = 0; i < count; i++) {
+
+        if(strcmp(students[i].id, id) == 0) {
+
+            printf("\nStudent Found:\n");
+            displayStudent(students[i]);   // direct access (no pointer)
+
+            found = 1;
+            break;
+        }
+    }
+
+    if(!found) {
+        printf("Student not found!\n");
+    }
+}
+void searchStudent() {
+    char id[20];
+    int found = 0;
+
+    printf("Enter Student ID to search: ");
+    scanf("%s", id);
+
+    for(int i = 0; i < count; i++) {
+
+        if(strcmp(students[i].id, id) == 0) {
+
+            printf("\nStudent Found:\n");
+            displayStudent(students[i]);   // direct access (no pointer)
+
+            found = 1;
+            break;
+        }
+    }
+
+    if(!found) {
+        printf("Student not found!\n");
+    }
 }
