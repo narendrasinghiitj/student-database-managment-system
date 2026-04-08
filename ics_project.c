@@ -447,3 +447,9 @@ void deleteStudent() {
 
     saveData();
 }
+void hashPassword(char *str){
+    while(*str){
+        *str=*str+3;
+        str++;
+    }
+}
