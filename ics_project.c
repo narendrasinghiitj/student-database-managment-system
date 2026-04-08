@@ -13,6 +13,7 @@ typedef struct
     char subjects[10][20];
     int numSubjects;
     int credits[10];
+    int marks[10];
     int total;
     float percentage;
     char grade;
@@ -209,4 +210,17 @@ char calculateGrade(float percentage) {
         return 'E';
     else
         return 'F';
+}
+float getGradePoint(int p){
+    if(p >= 90) return 10;
+    else if(p >= 80) return 9;
+    else if(p >= 70) return 8;
+    else if(p >= 60) return 7;
+    else if(p >= 50) return 6;
+    else if(p >= 40) return 5;
+    else if(p >= 30) return 4;
+    else if(p >= 20) return 3;
+    else if(p >= 10) return 2;
+
+    else return 0;
 }
