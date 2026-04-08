@@ -166,7 +166,9 @@ void addStudent() {
     students[count++] = s;
     printf("Student added successfully!\n");
     saveStudentToFile(s);
-  } void adminMode() {
+  } 
+  
+  void adminMode() {
     char password[20];
     printf("Enter admin password: ");
     scanf("%s", password);
@@ -196,6 +198,49 @@ void addStudent() {
         }
     }
 }
+
+//studentmode
+
+void studentMode() {
+    char id[20], dob[15];
+    int found = 0;
+
+    printf("Enter Student ID: ");
+    scanf("%s", id);
+
+    printf("Enter DOB (dd/mm/yyyy): ");
+    scanf("%s", dob);
+
+    for(int i=0; i<count; i++) {
+        if(strcmp(students[i].id, id) == 0) {
+            if(strcmp(students[i].dob, dob) == 0) {
+                displayStudent(students[i]);
+            } else {
+                printf("Incorrect DOB!\n");
+            }
+            found = 1;
+            break;
+        }
+    }
+
+    if(!found) printf("Student not found!\n");
+}
+
+void loadData() {
+    FILE *fp = fopen(FILE_NAME, "rb");
+    if(fp == NULL){
+        count=0;
+        return;
+    }
+    fread(&count, sizeof(int), 1, fp);
+    fread(students, sizeof(Student), count, fp);
+    if(count<0||count>MAX){
+        count=0;
+    }
+
+    fclose(fp);
+}
+
 void saveData() {
     FILE *fp = fopen(FILE_NAME, "wb");
 
@@ -223,16 +268,17 @@ char calculateGrade(float percentage) {
     else
         return 'F';
 }
-float getGradePoint(int p){
-    if(p >= 90) return 10;
-    else if(p >= 80) return 9;
-    else if(p >= 70) return 8;
-    else if(p >= 60) return 7;
-    else if(p >= 50) return 6;
-    else if(p >= 40) return 5;
-    else if(p >= 30) return 4;
-    else if(p >= 20) return 3;
-    else if(p >= 10) return 2;
 
-    else return 0;
+void clearAllData() {
+    FILE *fp = fopen(FILE_NAME, "wb");
+
+    if(fp != NULL) {
+        int zero = 0;
+        fwrite(&zero, sizeof(int), 1, fp);
+        fclose(fp);
+    }
+
+    count = 0;
+
+    printf("All data cleared!\n");
 }
