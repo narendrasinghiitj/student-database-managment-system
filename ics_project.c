@@ -334,3 +334,26 @@ void searchStudent() {
         printf("Student not found!\n");
     }
 }
+void searchStudent() {
+    char id[20];
+    int found = 0;
+
+    printf("Enter Student ID to search: ");
+    scanf("%s", id);
+
+    for(int i = 0; i < count; i++) {
+
+        if(strcmp(students[i].id, id) == 0) {
+
+            printf("\nStudent Found:\n");
+            displayStudent(students[i]);   // direct access (no pointer)
+
+            found = 1;
+            break;
+        }
+    }
+
+    if(!found) {
+        printf("Student not found!\n");
+    }
+}
