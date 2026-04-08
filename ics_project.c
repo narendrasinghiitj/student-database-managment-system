@@ -198,6 +198,33 @@ void addStudent() {
     }
 }
 
+//studentmode
+
+void studentMode() {
+    char id[20], dob[15];
+    int found = 0;
+
+    printf("Enter Student ID: ");
+    scanf("%s", id);
+
+    printf("Enter DOB (dd/mm/yyyy): ");
+    scanf("%s", dob);
+
+    for(int i=0; i<count; i++) {
+        if(strcmp(students[i].id, id) == 0) {
+            if(strcmp(students[i].dob, dob) == 0) {
+                displayStudent(students[i]);
+            } else {
+                printf("Incorrect DOB!\n");
+            }
+            found = 1;
+            break;
+        }
+    }
+
+    if(!found) printf("Student not found!\n");
+}
+
 void loadData() {
     FILE *fp = fopen(FILE_NAME, "rb");
     if(fp == NULL){
