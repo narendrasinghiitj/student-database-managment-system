@@ -406,3 +406,28 @@ void displayAll() {
     for(int i=0; i<count; i++)
         displayStudent(*(students+i));
 }
+void deleteStudent() {
+    char id[20];
+    int found = 0;
+
+    printf("Enter ID to delete: ");
+    scanf("%s", id);
+
+    for(int i=0; i<count; i++) {
+        if(strcmp(students[i].id, id) == 0) {
+
+            for(int j=i; j<count-1; j++)
+                *(students+j) = *(students+j+1);
+
+            count--;
+            found = 1;
+
+            printf("Deleted Student Data Successfully!\n");
+            break;
+        }
+    }
+
+    if(!found) printf("Student not found!\n");
+
+    saveData();
+}
