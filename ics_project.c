@@ -128,6 +128,18 @@ void changePassword()
     }
 }
 
+void displayStudent(Student s) {
+    printf("---------STUDENT-DETAILS---------");
+    printf("\nID: %s\nName: %s\nDOB: %s\n",s.id, s.name, s.dob);
+
+printf("\nSubjects | Marks | Credits:\n");
+for(int i=0; i<s.numSubjects; i++) {
+    printf("%s : %d | %d\n", (s.subjects+i),(s.marks+i),*(s.credits+i));
+}
+
+printf("\nTotal: %d\nPercentage: %.2f\nGrade: %c\nCGPA: %.2f\n",s.total, s.percentage, s.grade,s.cgpa);
+       printf("***********");
+}
 
 void addStudent() {
     if(count >= MAX) {
