@@ -268,7 +268,19 @@ char calculateGrade(float percentage) {
     else
         return 'F';
 }
+float getGradePoint(int p){
+    if(p >= 90) return 10;
+    else if(p >= 80) return 9;
+    else if(p >= 70) return 8;
+    else if(p >= 60) return 7;
+    else if(p >= 50) return 6;
+    else if(p >= 40) return 5;
+    else if(p >= 30) return 4;
+    else if(p >= 20) return 3;
+    else if(p >= 10) return 2;
 
+    else return 0;
+}
 void clearAllData() {
     FILE *fp = fopen(FILE_NAME, "wb");
 
