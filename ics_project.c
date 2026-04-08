@@ -183,4 +183,17 @@ void addStudent() {
         }
     }
 }
+void saveData() {
+    FILE *fp = fopen(FILE_NAME, "wb");
+
+    if(fp == NULL) {
+        printf("Error saving data!\n");
+        return;
+    }
+
+    fwrite(&count, sizeof(int), 1, fp);
+    fwrite(students, sizeof(Student), count, fp);
+
+    fclose(fp);
+}
 
