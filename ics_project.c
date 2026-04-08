@@ -146,56 +146,28 @@ printf("\nTotal: %d\nPercentage: %.2f\nGrade: %c\nCGPA: %.2f\n",s.total, s.perce
 
 void addStudent() {
     if(count >= MAX) {
-        printf("Limit reached!\n");
+        printf("Student limit reached!\n");
         return;
     }
-
     Student s;
-    int *m=s.marks;
-    int *c=s.credits;
-
-    printf("Enter ID: ");
-    scanf("%s", s.id);
-
+    int *m = s.marks;
+    int *c = s.credits;
+    printf("Enter Student ID: ");
+    scanf("%s", &s.id);
     while(getchar()!='\n');
-
     printf("Enter Name: ");
     fgets(s.name, 50, stdin);
     s.name[strcspn(s.name, "\n")] = '\0';
 
-    printf("Enter Date of Birth(dd/mm/yyyy): ");
+    printf("Enter Date of Birth(dd/mm/yyyy):");
     scanf("%s",s.dob);
-
-    printf("Enter the number of Subjects: ");
+    printf("Enter number of Subjects;");
     scanf("%d",&s.numSubjects);
 
-    s.total = 0;
-    float totalGP = 0;
-    int totalCredits = 0;
-
-    for(int i=0; i<s.numSubjects; i++) {
-        printf("Enter subject %d name:",i+1);
-        scanf("%s", &s.subjects[i]);
-        printf("Enter marks for %s: ", s.subjects[i]);
-        scanf("%d", (m+i));
-        printf("Enter credits for %s: ",s.subjects[i]);
-        scanf("%d",(c+i));
-        s.total += *(m+i);
-        float gp = getGradePoint(*(m+i));
-        totalGP += gp*(*(c+i));
-        totalCredits += *(c+i);
-    }
-
-    s.percentage = s.total / (float)s.numSubjects;
-    s.grade = calculateGrade(s.percentage);
-    s.cgpa = totalGP/totalCredits;
-
     students[count++] = s;
-    saveData();
-
     printf("Student added successfully!\n");
-}
-
+    saveStudentToFile(s);
+  } 
   void updateStudent() {
     char id[20];
     int found = 0;
@@ -425,29 +397,12 @@ void inputPassword(char *password) {
 
     password[i] = '\0';
 }
-void showDashboard() {
-    if(count == 0) {
+void displayAll() {
+    if(count <= 0 || count > MAX) {
         printf("No data!\n");
         return;
     }
 
-    int total = 0, top = 0;
-    int totalSubjects =0;
-
-    for(int i=0; i<count; i++) {
-        total += students[i].total;
-        totalSubjects+=students[i].numSubjects;
-        if(students[i].total > students[top].total)
-            top = i;
-    }
-    printf("----------DASHBOARD----------");
-    printf("\nTotal Students: %d\n", count);
-    printf("Average: %.2f\n", total/(float)(count*3));
-    printf("Topper: %s (%d)\n", students[top].name, students[top].total);
-}
-void hashPassword(char *str){
-    while(*str){
-        *str=*str+3;
-        str++;
-    }
+    for(int i=0; i<count; i++)
+        displayStudent(*(students+i));
 }
