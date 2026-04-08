@@ -373,26 +373,27 @@ void searchStudent() {
         printf("Student not found!\n");
     }
 }
-void searchStudent() {
-    char id[20];
-    int found = 0;
 
-    printf("Enter Student ID to search: ");
-    scanf("%s", id);
+void inputPassword(char *password) {
+    int i = 0;
+    char ch;
 
-    for(int i = 0; i < count; i++) {
+    while(1) {
+        ch = getch();   // read character (no echo)
 
-        if(strcmp(students[i].id, id) == 0) {
-
-            printf("\nStudent Found:\n");
-            displayStudent(students[i]);   // direct access (no pointer)
-
-            found = 1;
+        if(ch == 13)    // ENTER key
             break;
+
+        if(ch == 8) {   // BACKSPACE
+            if(i > 0) {
+                i--;
+                printf("\b \b");
+            }
+        } else {
+            password[i++] = ch;
+            printf("*");   // show *
         }
     }
 
-    if(!found) {
-        printf("Student not found!\n");
-    }
+    password[i] = '\0';
 }
