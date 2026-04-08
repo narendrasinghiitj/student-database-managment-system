@@ -425,3 +425,29 @@ void inputPassword(char *password) {
 
     password[i] = '\0';
 }
+void showDashboard() {
+    if(count == 0) {
+        printf("No data!\n");
+        return;
+    }
+
+    int total = 0, top = 0;
+    int totalSubjects =0;
+
+    for(int i=0; i<count; i++) {
+        total += students[i].total;
+        totalSubjects+=students[i].numSubjects;
+        if(students[i].total > students[top].total)
+            top = i;
+    }
+    printf("----------DASHBOARD----------");
+    printf("\nTotal Students: %d\n", count);
+    printf("Average: %.2f\n", total/(float)(count*3));
+    printf("Topper: %s (%d)\n", students[top].name, students[top].total);
+}
+void hashPassword(char *str){
+    while(*str){
+        *str=*str+3;
+        str++;
+    }
+}
