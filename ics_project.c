@@ -12,6 +12,7 @@ typedef struct
     char dob[15];
     char subjects[10][20];
     int numSubjects;
+    int marks[10];
     int credits[10];
     int marks[10];
     int total;
@@ -40,7 +41,6 @@ void updateStudent();
 void deleteStudent();
 void loadStudents();
 void showDashboard();
-
 
 void saveData() { printf("saveData called\n"); }
 char calculateGrade() { return 'A'; }
@@ -79,9 +79,11 @@ int main()
             printf("Invalid choice! Try again.\n");
         }
     }
-
-    return 0;
 }
+    
+Student students[MAX];
+int count = 0;
+char adminPass[20] = "admin123";
 
 void loadPassword()
 {
@@ -134,7 +136,7 @@ void displayStudent(Student s) {
 
 printf("\nSubjects | Marks | Credits:\n");
 for(int i=0; i<s.numSubjects; i++) {
-    printf("%s : %d | %d\n", (s.subjects+i),(s.marks+i),*(s.credits+i));
+    printf("%s : %d | %d\n", *(s.subjects+i),*(s.marks+i),*(s.credits+i));
 }
 
 printf("\nTotal: %d\nPercentage: %.2f\nGrade: %c\nCGPA: %.2f\n",s.total, s.percentage, s.grade,s.cgpa);
@@ -166,7 +168,7 @@ void addStudent() {
     students[count++] = s;
     printf("Student added successfully!\n");
     saveStudentToFile(s);
-  } 
+} 
   
   void adminMode() {
     char password[20];
