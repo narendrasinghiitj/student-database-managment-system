@@ -1,23 +1,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define SUBJECTS 10
+
 #define MAX 100
+#define FILE_NAME "students.dat"
 
 typedef struct
 {
-    int id;
+    char id[20];
     char name[50];
-    int marks[SUBJECTS];
+    char dob[15];
+    char subjects[10][20];
+    int numSubjects;
+    int credits[10];
     int total;
     float percentage;
     char grade;
+    float cgpa;
 } Student;
 
 Student students[MAX];
 int count = 0;
 char adminPass[20] = "admin123";
 
+void loadData();
+void saveData();
+void displayStudent(Student s);
+void displayAll();
 void loadPassword();
 void changePassword();
 void addStudent();
@@ -30,7 +39,6 @@ void updateStudent();
 void deleteStudent();
 void loadStudents();
 void showDashboard();
-
 
 
 void saveData() { printf("saveData called\n"); }
