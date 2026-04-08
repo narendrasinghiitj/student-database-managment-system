@@ -12,7 +12,9 @@ typedef struct
     char dob[15];
     char subjects[10][20];
     int numSubjects;
+    int marks[10];
     int credits[10];
+    int marks[10];
     int total;
     float percentage;
     char grade;
@@ -39,7 +41,6 @@ void updateStudent();
 void deleteStudent();
 void loadStudents();
 void showDashboard();
-
 
 void saveData() { printf("saveData called\n"); }
 char calculateGrade() { return 'A'; }
@@ -78,9 +79,11 @@ int main()
             printf("Invalid choice! Try again.\n");
         }
     }
-
-    return 0;
 }
+    
+Student students[MAX];
+int count = 0;
+char adminPass[20] = "admin123";
 
 void loadPassword()
 {
@@ -133,7 +136,7 @@ void displayStudent(Student s) {
 
 printf("\nSubjects | Marks | Credits:\n");
 for(int i=0; i<s.numSubjects; i++) {
-    printf("%s : %d | %d\n", (s.subjects+i),(s.marks+i),*(s.credits+i));
+    printf("%s : %d | %d\n", *(s.subjects+i),*(s.marks+i),*(s.credits+i));
 }
 
 printf("\nTotal: %d\nPercentage: %.2f\nGrade: %c\nCGPA: %.2f\n",s.total, s.percentage, s.grade,s.cgpa);
@@ -180,7 +183,7 @@ void addStudent() {
     students[count++]=s;
     saveData();
     printf("Student added succesfully !\n");
-  } 
+  }  
   
   void adminMode() {
     char password[20];
@@ -212,6 +215,49 @@ void addStudent() {
         }
     }
 }
+
+//studentmode
+
+void studentMode() {
+    char id[20], dob[15];
+    int found = 0;
+
+    printf("Enter Student ID: ");
+    scanf("%s", id);
+
+    printf("Enter DOB (dd/mm/yyyy): ");
+    scanf("%s", dob);
+
+    for(int i=0; i<count; i++) {
+        if(strcmp(students[i].id, id) == 0) {
+            if(strcmp(students[i].dob, dob) == 0) {
+                displayStudent(students[i]);
+            } else {
+                printf("Incorrect DOB!\n");
+            }
+            found = 1;
+            break;
+        }
+    }
+
+    if(!found) printf("Student not found!\n");
+}
+
+void loadData() {
+    FILE *fp = fopen(FILE_NAME, "rb");
+    if(fp == NULL){
+        count=0;
+        return;
+    }
+    fread(&count, sizeof(int), 1, fp);
+    fread(students, sizeof(Student), count, fp);
+    if(count<0||count>MAX){
+        count=0;
+    }
+
+    fclose(fp);
+}
+
 void saveData() {
     FILE *fp = fopen(FILE_NAME, "wb");
 
@@ -239,7 +285,19 @@ char calculateGrade(float percentage) {
     else
         return 'F';
 }
+float getGradePoint(int p){
+    if(p >= 90) return 10;
+    else if(p >= 80) return 9;
+    else if(p >= 70) return 8;
+    else if(p >= 60) return 7;
+    else if(p >= 50) return 6;
+    else if(p >= 40) return 5;
+    else if(p >= 30) return 4;
+    else if(p >= 20) return 3;
+    else if(p >= 10) return 2;
 
+    else return 0;
+}
 void clearAllData() {
     FILE *fp = fopen(FILE_NAME, "wb");
 
