@@ -165,7 +165,9 @@ void addStudent() {
     students[count++] = s;
     printf("Student added successfully!\n");
     saveStudentToFile(s);
-  } void adminMode() {
+  } 
+  
+  void adminMode() {
     char password[20];
     printf("Enter admin password: ");
     scanf("%s", password);
@@ -221,4 +223,18 @@ char calculateGrade(float percentage) {
         return 'E';
     else
         return 'F';
+}
+
+void clearAllData() {
+    FILE *fp = fopen(FILE_NAME, "wb");
+
+    if(fp != NULL) {
+        int zero = 0;
+        fwrite(&zero, sizeof(int), 1, fp);
+        fclose(fp);
+    }
+
+    count = 0;
+
+    printf("All data cleared!\n");
 }
