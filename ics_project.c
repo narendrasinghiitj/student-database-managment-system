@@ -183,6 +183,22 @@ void addStudent() {
         }
     }
 }
+
+void loadData() {
+    FILE *fp = fopen(FILE_NAME, "rb");
+    if(fp == NULL){
+        count=0;
+        return;
+    }
+    fread(&count, sizeof(int), 1, fp);
+    fread(students, sizeof(Student), count, fp);
+    if(count<0||count>MAX){
+        count=0;
+    }
+
+    fclose(fp);
+}
+
 void saveData() {
     FILE *fp = fopen(FILE_NAME, "wb");
 
