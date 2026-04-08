@@ -41,10 +41,7 @@ void updateStudent();
 void deleteStudent();
 void loadStudents();
 void showDashboard();
-<<<<<<< HEAD
 void hashPassword(char *str);
-=======
->>>>>>> bbdec2d4c044c1b451c0d78b83e47d228a1be7ad
 
 void saveData() { printf("saveData called\n"); }
 char calculateGrade() { return 'A'; }
@@ -167,7 +164,6 @@ void addStudent() {
     printf("Enter number of Subjects;");
     scanf("%d",&s.numSubjects);
 
-<<<<<<< HEAD
     students[count++] = s;
     printf("Student added successfully!\n");
     saveStudentToFile(s);
@@ -229,31 +225,6 @@ void addStudent() {
 
 
     void adminMode() {
-=======
-    s.total=0;
-    float totalGP=0;
-    int totalCredits = 0;
-    for(int i=0;i<s.numSubjects;i++){
-        printf("Enter subject %d name :",i+1);
-        scanf("%s",&s.subjects[i]);
-        printf("Enter marks for %s :",s.subjects[i]);
-        scanf("%d",(m+i));
-        s.total +=  *(m+i);
-        float gp = getGradePoint(*(m+i));
-        totalGP += gp*(*(c+i));
-        totalCredits += *(c+i);
-    }
-    s.percentage = s.total/(float)s.numSubjects;
-    s.grade = calculateGrade(s.percentage);
-    s.cgpa = totalGP/totalCredits;
-
-    students[count++]=s;
-    saveData();
-    printf("Student added succesfully !\n");
-  }  
-  
-  void adminMode() {
->>>>>>> bbdec2d4c044c1b451c0d78b83e47d228a1be7ad
     char password[20];
     printf("Enter admin password: ");
     scanf("%s", password);
@@ -378,29 +349,6 @@ void clearAllData() {
     count = 0;
 
     printf("All data cleared!\n");
-}
-void searchStudent() {
-    char id[20];
-    int found = 0;
-
-    printf("Enter Student ID to search: ");
-    scanf("%s", id);
-
-    for(int i = 0; i < count; i++) {
-
-        if(strcmp(students[i].id, id) == 0) {
-
-            printf("\nStudent Found:\n");
-            displayStudent(students[i]);   // direct access (no pointer)
-
-            found = 1;
-            break;
-        }
-    }
-
-    if(!found) {
-        printf("Student not found!\n");
-    }
 }
 void searchStudent() {
     char id[20];
