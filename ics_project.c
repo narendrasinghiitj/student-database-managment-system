@@ -146,25 +146,40 @@ void addStudent() {
         return;
     }
     Student s;
+    int *m = s.marks;
+    int *c = s.credits;
     printf("Enter Student ID: ");
-    scanf("%d", &s.id);
+    scanf("%s", &s.id);
     while(getchar()!='\n');
     printf("Enter Name: ");
     fgets(s.name, 50, stdin);
     s.name[strcspn(s.name, "\n")] = '\0';
 
-    s.total = 0;
-    for(int i=0; i<3; i++) {
-        printf("Enter marks for subject %d: ", i+1);
-        scanf("%d", &s.marks[i]);
-        s.total += s.marks[i];
-    }
-    s.percentage = s.total / 3.0;
-    s.grade = calculateGrade(s.percentage);
+    printf("Enter Date of Birth(dd/mm/yyyy):");
+    scanf("%s",s.dob);
+    printf("Enter number of Subjects;");
+    scanf("%d",&s.numSubjects);
 
-    students[count++] = s;
-    printf("Student added successfully!\n");
-    saveStudentToFile(s);
+    s.total=0;
+    float totalGP=0;
+    int totalCredits = 0;
+    for(int i=0;i<s.numSubjects;i++){
+        printf("Enter subject %d name :",i+1);
+        scanf("%s",&s.subjects[i]);
+        printf("Enter marks for %s :",s.subjects[i]);
+        scanf("%d",(m+i));
+        s.total +=  *(m+i);
+        float gp = getGradePoint(*(m+i));
+        totalGP += gp*(*(c+i));
+        totalCredits += *(c+i);
+    }
+    s.percentage = s.total/(float)s.numSubjects;
+    s.grade = calculateGrade(s.percentage);
+    s.cgpa = totalGP/totalCredits;
+
+    students[count++]=s;
+    saveData();
+    printf("Student added succesfully !\n");
   } 
   
   void adminMode() {
