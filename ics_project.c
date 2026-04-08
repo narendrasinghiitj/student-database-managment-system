@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
 
 #define MAX 100
 #define FILE_NAME "students.dat"
@@ -14,7 +15,6 @@ typedef struct
     int numSubjects;
     int marks[10];
     int credits[10];
-    int marks[10];
     int total;
     float percentage;
     char grade;
@@ -35,27 +35,22 @@ void addStudent();
 void adminMode();
 void studentMode();
 void saveData();
-char calculateGrade();
-void saveStudentToFile();
+char calculateGrade(float precentage);
 void updateStudent();
 void deleteStudent();
 void loadStudents();
 void showDashboard();
 void hashPassword(char *str);
+float getGradePoint(int p);
+void inputPassword(char *password);
+void searchStudent();
+void clearAllData();
 
-void saveData() { printf("saveData called\n"); }
-char calculateGrade() { return 'A'; }
-void saveStudentToFile() { printf("saveStudentToFile called\n"); }
-void updateStudent() { printf("updateStudent called\n"); }
-void deleteStudent() { printf("deleteStudent called\n"); }
-void loadStudents() { printf("loadStudents called\n"); }
-void showDashboard() { printf("showDashboard called\n"); }
-void studentMode() { printf("studentMode called\n"); }
 
 int main()
 {
     loadPassword();
-
+    loadData();
     int choice;
     while (1)
     {
@@ -67,8 +62,7 @@ int main()
 
         switch (choice)
         {
-        case 1:
-            adminMode();
+        case 1: adminMode();
             break;
         case 2:
             studentMode();
@@ -81,10 +75,6 @@ int main()
         }
     }
 }
-    
-Student students[MAX];
-int count = 0;
-char adminPass[20] = "admin123";
 
 void loadPassword()
 {
@@ -92,9 +82,9 @@ void loadPassword()
 
     if (fp == NULL)
     {
-        // first time → default password
+       
         strcpy(adminPass, "admin123");
-
+        hashPassword(adminPass);
         fp = fopen("admin.txt", "w");
         fprintf(fp, "%s", adminPass);
         fclose(fp);
@@ -111,12 +101,13 @@ void changePassword()
 
     printf("Enter old password: ");
     scanf("%s", oldPass);
+    hashPassword(oldPass);
 
     if (strcmp(oldPass, adminPass) == 0)
     {
         printf("Enter new password: ");
         scanf("%s", newPass);
-
+        hashPassword(newPass);
         FILE *fp = fopen("admin.txt", "w");
         fprintf(fp, "%s", newPass);
         fclose(fp);
@@ -141,7 +132,7 @@ for(int i=0; i<s.numSubjects; i++) {
 }
 
 printf("\nTotal: %d\nPercentage: %.2f\nGrade: %c\nCGPA: %.2f\n",s.total, s.percentage, s.grade,s.cgpa);
-       printf("***********");
+       printf("************************");
 }
 
 void addStudent() {
@@ -164,9 +155,31 @@ void addStudent() {
     printf("Enter number of Subjects;");
     scanf("%d",&s.numSubjects);
 
+    s.total = 0;
+    float totalGP = 0;
+    int totalCredits = 0;
+
+    for(int i=0; i<s.numSubjects; i++) {
+        printf("Enter subject %d name:",i+1);
+        scanf("%s", &s.subjects[i]);
+        printf("Enter marks for %s: ", s.subjects[i]);
+        scanf("%d", (m+i));
+        printf("Enter credits for %s: ",s.subjects[i]);
+        scanf("%d",(c+i));
+        s.total += *(m+i);
+        float gp = getGradePoint(*(m+i));
+        totalGP += gp*(*(c+i));
+        totalCredits += *(c+i);
+    }
+
+    s.percentage = s.total / (float)s.numSubjects;
+    s.grade = calculateGrade(s.percentage);
+    s.cgpa = totalGP/totalCredits;
+
     students[count++] = s;
+    saveData();
+
     printf("Student added successfully!\n");
-    saveStudentToFile(s);
   } 
   void updateStudent() {
     char id[20];
@@ -227,7 +240,8 @@ void addStudent() {
   void adminMode() {
     char password[20];
     printf("Enter admin password: ");
-    scanf("%s", password);
+    inputPassword(password);
+    hashPassword(password);
     if(strcmp(password, adminPass) != 0) {
         printf("Incorrect password! Access denied.\n");
         return;
@@ -237,7 +251,7 @@ void addStudent() {
     while(1) {
         printf("\n--- Admin Mode ---\n");
         printf("1. Add Student\n2. Update Student Details\n3. Delete Student\n");
-        printf("4. Display All Students\n5. Dashboard\n6. Change Admin Password\n7. Logout\n");
+        printf("4. Display All Students\n5. Search Student\n6. Dashboard\n7. Change Admin Password\n8. Clear All Data\n9. Logout\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
         getchar();
@@ -246,10 +260,12 @@ void addStudent() {
             case 1: addStudent(); break;
             case 2: updateStudent(); break;
             case 3: deleteStudent(); break;
-            case 4: loadStudents(); break;
-            case 5: showDashboard(); break;
-            case 6: changePassword(); break;
-            case 7: return;
+            case 4: displayAll(); break;
+            case 5: searchStudent(); break;
+            case 6: showDashboard(); break;
+            case 7: changePassword(); break;
+            case 8: clearAllData(); break;
+            case 9: return;
             default: printf("Invalid choice! Try again.\n");
         }
     }
@@ -362,7 +378,7 @@ void searchStudent() {
         if(strcmp(students[i].id, id) == 0) {
 
             printf("\nStudent Found:\n");
-            displayStudent(students[i]);   // direct access (no pointer)
+            displayStudent(students[i]);   
 
             found = 1;
             break;
@@ -379,19 +395,19 @@ void inputPassword(char *password) {
     char ch;
 
     while(1) {
-        ch = getch();   // read character (no echo)
+        ch = getch();   
 
-        if(ch == 13)    // ENTER key
+        if(ch == 13)    
             break;
 
-        if(ch == 8) {   // BACKSPACE
+        if(ch == 8) {   
             if(i > 0) {
                 i--;
                 printf("\b \b");
             }
         } else {
             password[i++] = ch;
-            printf("*");   // show *
+            printf("*");   
         }
     }
 
