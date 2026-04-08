@@ -12,6 +12,7 @@ typedef struct
     char dob[15];
     char subjects[10][20];
     int numSubjects;
+    int marks[10];
     int credits[10];
     int total;
     float percentage;
@@ -39,7 +40,7 @@ void updateStudent();
 void deleteStudent();
 void loadStudents();
 void showDashboard();
-
+void hashPassword(char *str);
 
 void saveData() { printf("saveData called\n"); }
 char calculateGrade() { return 'A'; }
@@ -165,7 +166,64 @@ void addStudent() {
     students[count++] = s;
     printf("Student added successfully!\n");
     saveStudentToFile(s);
-  } void adminMode() {
+  } 
+  void updateStudent() {
+    char id[20];
+    int found = 0;
+
+    printf("Enter ID to update: ");
+    scanf("%s", id);
+
+    for(int i=0; i<count; i++) {
+        if(strcmp(students[i].id, id) == 0) {
+
+            found = 1;
+
+            while(getchar()!='\n');
+
+            printf("Enter new name: ");
+            fgets(students[i].name, 50, stdin);
+            students[i].name[strcspn(students[i].name, "\n")] = '\0';
+
+            float totalGP = 0;
+            int totalCredits = 0;
+
+            students[i].total = 0;
+
+    for(int j = 0; j < students[i].numSubjects; j++) {
+
+            printf("Enter subject %d name: ", j+1);
+            scanf("%s", students[i].subjects[j]);
+
+            printf("Enter marks for %s: ", students[i].subjects[j]);
+            scanf("%d", &students[i].marks[j]);
+
+            printf("Enter credits for %s: ", students[i].subjects[j]);
+            scanf("%d", &students[i].credits[j]);
+
+            students[i].total += students[i].marks[j];
+
+            float gp = getGradePoint(students[i].marks[j]);
+            totalGP += gp * students[i].credits[j];
+            totalCredits += students[i].credits[j];
+}
+
+            students[i].cgpa = totalGP / totalCredits;
+            students[i].percentage = students[i].total / (float)students[i].numSubjects;
+
+           
+            printf("Updated successfully!\n");
+            break;
+        }
+    }
+
+    if(!found) printf("Student not found!\n");
+
+    saveData();
+}
+
+
+    void adminMode() {
     char password[20];
     printf("Enter admin password: ");
     scanf("%s", password);
